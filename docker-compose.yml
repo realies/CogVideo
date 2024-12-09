@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  cogvideo:
+    build: .
+    image: cogvideo
+    container_name: cogvideo
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      # Persist HuggingFace model cache
+      - ./huggingface_cache:/root/.cache/huggingface
+      # Persist generated videos
+      - ./video_outputs:/app/outputs
+    ports:
+      - "7860:7860"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
